@@ -18,12 +18,12 @@ def MC_ExtAir(u_ext_co2, phi_ext_co2, a_flr):
     return u_ext_co2 * phi_ext_co2 / a_flr
 
 
-# 5
-
+# helper function for function no.5
 def f_Pad(u_pad, phi_pad, a_flr):
     return u_pad * phi_pad / a_flr
 
 
+# 5
 def MC_PadAir(u_pad, phi_pad, a_flr, co2_out, co2_air):
     f_pad = f_Pad(u_pad, phi_pad, a_flr)
     return f_pad * (co2_out - co2_air)
