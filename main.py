@@ -60,8 +60,7 @@ def f_VentRoofSide(c_d, a_flr, u_roof, u_side, a_roof, a_side, g, h_side_roof, t
             2 * g * h_side_roof * (t_air - t_out) / t_mean_air +
 
             ((u_roof * a_roof + u_side * a_side) / 2) ** 2 *
-            c_w * v_wind ** 2
-    ) ** (1 / 2)
+            c_w * v_wind ** 2) ** (1 / 2)
 
 
 # 11
@@ -90,6 +89,39 @@ def f_VentSide(eta_ins_scr, f_vent_side_double_prime, f_leakage, eta_side, eta_s
             u_th_scr * f_vent_side_double_prime +
             (1 - u_th_scr) * f_vent_roof_side * eta_side) + 0.5 * f_leakage
 
+
+# 14
+def f_VentForced(eta_ins_scr, u_vent_forced, phi_vent_forced, a_flr):
+    return eta_ins_scr * u_vent_forced * phi_vent_forced / a_flr
+
+
+# 15
+def MC_TopOut(f_vent_roof, co2_top, co2_out):
+    return f_vent_roof * (co2_top - co2_out)
+
+
+# 16
+def f_VentRoof(eta_ins_scr, f_vent_roof_double_prime, f_leakage, eta_roof, eta_roof_thr, u_th_scr, f_vent_roof_side,
+               eta_side):
+    if eta_roof >= eta_roof_thr:
+        return eta_ins_scr * f_vent_roof_double_prime + 0.5 * f_leakage
+    return eta_ins_scr * (
+            u_th_scr * f_vent_roof_double_prime + (1 - u_th_scr) * f_vent_roof_side * eta_side) + 0.5 * f_leakage
+
+
+# 17
+def f_VentRoof_double_prime(c_d, u_roof, a_roof, a_flr, g, h_roof, t_air, t_out, t_mean_air, c_w, v_wind):
+    return c_d * u_roof * a_roof / (2 * a_flr) * \
+           (g * h_roof * (t_air - t_out) / (2 * t_mean_air) + c_w * v_wind ** 2) ** (1 / 2)
+
+
+# 18
+def MC_AirCan(m_ch2o, p, r):
+    return m_ch2o * (p - r)
+
+
+# 19 is removed because h_C_Buf is always equal to 1
+# 20 - 29 are no longer required
 
 if __name__ == '__main__':
     print('Hello world')
