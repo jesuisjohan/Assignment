@@ -222,19 +222,19 @@ if __name__ == '__main__':
 
     # Sub functions - Start
     f_th_scr = f_ThScr(u_th_scr, k_th_scr, t_air, t_top, g, rho_mean_air, rho_air, rho_top)  # 7, needed to calculate 6
-    f_vent_roof_side = f_VentRoofSide(c_d, a_flr, u_roof, u_side, a_roof, a_side, g, h_side_roof, t_air, t_out,
-                                      t_mean_air, c_w, v_wind)  # 10, needed to calculate 13
+    f_vent_roof_side = f_VentRoofSide(c_d, a_flr, u_roof, u_side, a_roof, a_side, g, h_side_roof,
+                                      t_air, t_out, t_mean_air, c_w, v_wind)  # 10, needed to calculate 13
     eta_ins_scr = eta_ins_scr(zeta_ins_scr)  # 11, needed to calculate
     f_leakage = f_leakage(v_wind, c_leakage)  # 12, needed to calculate
-    f_vent_side_double_prime = f_VentSide_double_prime(c_d, a_flr, u_side, a_side, c_w,
-                                                       v_wind)  # sub function, needed to calculate 13
-    f_vent_side = f_VentSide(eta_ins_scr, f_vent_side_double_prime, f_leakage, eta_side, eta_side_thr, u_th_scr,
-                             f_vent_roof_side)  # 13, needed to calculate 9
+    f_vent_side_double_prime = f_VentSide_double_prime(c_d, a_flr, u_side, a_side,
+                                                       c_w, v_wind)  # sub function, needed to calculate 13
+    f_vent_side = f_VentSide(eta_ins_scr, f_vent_side_double_prime, f_leakage,
+                             eta_side, eta_side_thr, u_th_scr, f_vent_roof_side)  # 13, needed to calculate 9
     f_vent_forced = f_VentForced(eta_ins_scr, u_vent_forced, phi_vent_forced, a_flr)  # 14, needed to calculate 9
     f_vent_roof_double_prime = f_VentRoof_double_prime(c_d, u_roof, a_roof, a_flr, g, h_vent, t_air, t_out, t_mean_air,
                                                        c_w, v_wind)  # 17, needed to calculate 16
-    f_vent_roof = f_VentRoof(eta_ins_scr, f_vent_roof_double_prime, f_leakage, eta_roof, eta_roof_thr, u_th_scr,
-                             f_vent_roof_side, eta_side)  # 16, needed to calculate 15
+    f_vent_roof = f_VentRoof(eta_ins_scr, f_vent_roof_double_prime, f_leakage,
+                             eta_roof, eta_roof_thr, u_th_scr, f_vent_roof_side, eta_side)  # 16, needed to calculate 15
     CO2_Stom = CO2_Stom(eta_CO2_Air_Stom, co2_air)  # 9.21, needed to calculate 9.12 and 9.13
     gamma = gamma(c_gamma, t_can)  # 9.22, needed to calculate 9.12 and 9.13
     J_Max25Can = J_Max25Can(LAI, J_Max25Leaf)  # 9.16, needed to calculate 9.15
