@@ -227,7 +227,7 @@ if __name__ == '__main__':
     eta_ins_scr = eta_ins_scr(zeta_ins_scr)  # 11, needed to calculate
     f_leakage = f_leakage(v_wind, c_leakage)  # 12, needed to calculate
     f_vent_side_double_prime = f_VentSide_double_prime(c_d, a_flr, u_side, a_side, c_w,
-                                                       v_wind)  # subfunction, needed to calculate 13
+                                                       v_wind)  # sub function, needed to calculate 13
     f_vent_side = f_VentSide(eta_ins_scr, f_vent_side_double_prime, f_leakage, eta_side, eta_side_thr, u_th_scr,
                              f_vent_roof_side)  # 13, needed to calculate 9
     f_vent_forced = f_VentForced(eta_ins_scr, u_vent_forced, phi_vent_forced, a_flr)  # 14, needed to calculate 9
