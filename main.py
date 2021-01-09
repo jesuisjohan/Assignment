@@ -114,7 +114,7 @@ def MC_AirCan(m_ch2o, p, r):
     return m_ch2o * (p - r)
 
 
-# Sub functions for function 18 - Start
+# Subfunctions for function 18 - Start
 # 9.12
 def P(J, CO2_Stom, gamma):
     return (J * (CO2_Stom - gamma)) / (4 * CO2_Stom + 2 * gamma)
@@ -152,7 +152,7 @@ def gamma(c_gamma, t_can):
     return c_gamma * t_can
 
 
-# Sub functions for function 18 - End
+# Subfunctions for function 18 - End
 # 19, not used since h_c_buf = 1
 def h_c_buff(c_buf, c_max_buf):
     if c_buf > c_max_buf:
@@ -160,8 +160,40 @@ def h_c_buff(c_buf, c_max_buf):
     return 1
 
 
+# Euler's method
+def func(x, y):
+    return (x + y + x * y)
+
+
+def euler(x0, y, h, x):
+    temp = -0
+    while x0 < x:
+        temp = y
+        y = y + h * func(x0, y)
+        x0 = x0 + h
+    return y
+
+
+# Runge-Kutta
+def dydx(x, y):
+    return ((x - y) / 2)
+
+
+def rungeKutta(x0, y0, x, h):
+    n = (int)((x - x0) / h)
+    y = y0
+    for i in range(1, n + 1):
+        k1 = h * dydx(x0, y)
+        k2 = h * dydx(x0 + 0.5 * h, y + 0.5 * k1)
+        k3 = h * dydx(x0 + 0.5 * h, y + 0.5 * k2)
+        k4 = h * dydx(x0 + h, y + k3)
+        y = y + (1.0 / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
+        x0 = x0 + h
+    return y
+
+
 if __name__ == '__main__':
-    # We chose Netherlands data to calculate
+    # We chose Netherland's data to calculate
     # Argument data list - Start
     PAR = 100  # Self-ini
     u_blow = 0  # Self-ini
@@ -222,19 +254,19 @@ if __name__ == '__main__':
 
     # Sub functions - Start
     f_th_scr = f_ThScr(u_th_scr, k_th_scr, t_air, t_top, g, rho_mean_air, rho_air, rho_top)  # 7, needed to calculate 6
-    f_vent_roof_side = f_VentRoofSide(c_d, a_flr, u_roof, u_side, a_roof, a_side, g, h_side_roof,
-                                      t_air, t_out, t_mean_air, c_w, v_wind)  # 10, needed to calculate 13
+    f_vent_roof_side = f_VentRoofSide(c_d, a_flr, u_roof, u_side, a_roof, a_side, g, h_side_roof, t_air, t_out,
+                                      t_mean_air, c_w, v_wind)  # 10, needed to calculate 13
     eta_ins_scr = eta_ins_scr(zeta_ins_scr)  # 11, needed to calculate
     f_leakage = f_leakage(v_wind, c_leakage)  # 12, needed to calculate
-    f_vent_side_double_prime = f_VentSide_double_prime(c_d, a_flr, u_side, a_side,
-                                                       c_w, v_wind)  # sub function, needed to calculate 13
-    f_vent_side = f_VentSide(eta_ins_scr, f_vent_side_double_prime, f_leakage,
-                             eta_side, eta_side_thr, u_th_scr, f_vent_roof_side)  # 13, needed to calculate 9
+    f_vent_side_double_prime = f_VentSide_double_prime(c_d, a_flr, u_side, a_side, c_w,
+                                                       v_wind)  # subfunction, needed to calculate 13
+    f_vent_side = f_VentSide(eta_ins_scr, f_vent_side_double_prime, f_leakage, eta_side, eta_side_thr, u_th_scr,
+                             f_vent_roof_side)  # 13, needed to calculate 9
     f_vent_forced = f_VentForced(eta_ins_scr, u_vent_forced, phi_vent_forced, a_flr)  # 14, needed to calculate 9
     f_vent_roof_double_prime = f_VentRoof_double_prime(c_d, u_roof, a_roof, a_flr, g, h_vent, t_air, t_out, t_mean_air,
                                                        c_w, v_wind)  # 17, needed to calculate 16
-    f_vent_roof = f_VentRoof(eta_ins_scr, f_vent_roof_double_prime, f_leakage,
-                             eta_roof, eta_roof_thr, u_th_scr, f_vent_roof_side, eta_side)  # 16, needed to calculate 15
+    f_vent_roof = f_VentRoof(eta_ins_scr, f_vent_roof_double_prime, f_leakage, eta_roof, eta_roof_thr, u_th_scr,
+                             f_vent_roof_side, eta_side)  # 16, needed to calculate 15
     CO2_Stom = CO2_Stom(eta_CO2_Air_Stom, co2_air)  # 9.21, needed to calculate 9.12 and 9.13
     gamma = gamma(c_gamma, t_can)  # 9.22, needed to calculate 9.12 and 9.13
     J_Max25Can = J_Max25Can(LAI, J_Max25Leaf)  # 9.16, needed to calculate 9.15
@@ -255,3 +287,9 @@ if __name__ == '__main__':
 
     dx_air = cap_CO2_Air_CO2_dot_air(mc_blow_air, mc_ext_air, mc_pad_air, mc_air_can, mc_air_top, mc_air_out)  # 1
     dx_top = cap_CO2_Top_CO2_dot_top(mc_air_top, mc_top_out)  # 2
+
+    # Runge-Kutta
+    h = 4  # Self-ini, 5 minutes
+    euler = euler(dx_air, dx_top, h, co2_air)
+    rk4 = rungeKutta(dx_air, dx_top, co2_air, h)
+    print(euler)
